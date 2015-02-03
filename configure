@@ -1,0 +1,4 @@
+#!/bin/sh
+JAVA_HOME_CMD=/usr/libexec/java_home
+JAVA_VERSION=1.6
+echo "org.gradle.java.home=$(${JAVA_HOME_CMD} -v${JAVA_VERSION})" > gradle.properties

@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+version = '0.1.0'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'net.java.dev.jna', name: 'jna', version: '4.1.0'
+}
+
+// debug //
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.jimbru.jposix.Unistd'
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+            'Implementation-Version': version,
+            'Main-Class': 'com.jimbru.jposix.Unistd'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
