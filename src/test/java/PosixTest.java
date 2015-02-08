@@ -8,6 +8,6 @@ public class PosixTest {
 
     @Test
     public void doSomething() {
-        Posix.printf("foo bar %s!", "baz");
+        System.out.println("This test is useless!");
     }
 }

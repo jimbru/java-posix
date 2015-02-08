@@ -6,9 +6,10 @@ import com.sun.jna.Platform;
 
 public class Posix {
 
-    interface CLibrary extends Library {
-        void printf(String format, Object... args);
-        int execl(String path, String... args);
+    private interface CLibrary extends Library {
+        int execv(String path, String[] argv);
+        int execve(String path, String[] argv, String[] envp);
+        int execvp(String file, String[] argv);
     }
 
     private static CLibrary _instance = null;
@@ -20,16 +21,19 @@ public class Posix {
         return _instance;
     }
 
-    public static void printf(String format, Object... args) {
-        getInstance().printf(format, args);
+    public static int execv(String path, String[] argv) {
+        return getInstance().execv(path, argv);
     }
 
-    public static int execl(String path, String... args) {
-        return getInstance().execl(path, args);
+    public static int execve(String path, String[] argv, String[] envp) {
+        return getInstance().execve(path, argv, envp);
+    }
+
+    public static int execvp(String file, String[] argv) {
+        return getInstance().execvp(file, argv);
     }
 
     public static void main(String[] args) {
-        Posix.printf("Hello from JNA!\n");
-        Posix.execl("/bin/sh");
+        Posix.execvp("/bin/echo", new String[]{"echo", "hello world"});
     }
 }
