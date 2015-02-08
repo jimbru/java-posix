@@ -2,11 +2,12 @@ package com.jimbru.posix;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
+import com.sun.jna.Platform;
 
 public class Unistd {
 
-    public interface CLibrary extends Library {
-        CLibrary INSTANCE = (CLibrary) Native.loadLibrary("c", CLibrary.class);
+    interface CLibrary extends Library {
+        CLibrary INSTANCE = (CLibrary) Native.loadLibrary(Platform.C_LIBRARY_NAME, CLibrary.class);
 
         void printf(String format, Object... args);
 
