@@ -1,13 +1,13 @@
 package com.jimbru.posix;
 
-import com.jimbru.posix.Unistd;
+import com.jimbru.posix.Posix;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class UnistdTest {
+public class PosixTest {
 
     @Test
     public void doSomething() {
-        Unistd.CLibrary.INSTANCE.printf("foo bar %s!", "baz");
+        Posix.printf("foo bar %s!", "baz");
     }
 }
