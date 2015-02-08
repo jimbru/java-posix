@@ -1,4 +1,4 @@
-package com.jimbru.jposix;
+package com.jimbru.posix;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;

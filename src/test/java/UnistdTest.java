@@ -1,6 +1,6 @@
-package com.jimbru.jposix;
+package com.jimbru.posix;
 
-import com.jimbru.jposix.Unistd;
+import com.jimbru.posix.Unistd;
 import org.junit.Assert;
 import org.junit.Test;
 
