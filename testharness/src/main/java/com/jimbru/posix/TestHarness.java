@@ -11,19 +11,22 @@ public class TestHarness {
             System.exit(1);
         }
 
-        String fn = args[0];
         String args_first = args[1];
         String[] args_rest = Arrays.copyOfRange(args, 1, args.length);
 
-        if (fn.equals("execv")) {
-            Posix.execv(args_first, args_rest);
-        } else if (fn.equals("execve")) {
-            Posix.execve(args_first, args_rest, new String[]{"PATH=/bin", "TEST=abc"});
-        } else if (fn.equals("execvp")) {
-            Posix.execvp(args_first, args_rest);
-        } else {
-            System.out.printf("Unknown function: %s\n", fn);
-            System.exit(1);
+        switch (args[0]) {
+            case "execv":
+                Posix.execv(args_first, args_rest);
+                break;
+            case "execve":
+                Posix.execve(args_first, args_rest, new String[]{"PATH=/bin", "TEST=abc"});
+                break;
+            case "execvp":
+                Posix.execvp(args_first, args_rest);
+                break;
+            default:
+                System.out.printf("Unknown function: %s\n", args[0]);
+                System.exit(1);
         }
     }
 }
