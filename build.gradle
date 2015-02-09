@@ -1,34 +1,54 @@
-apply plugin: 'java'
+subprojects {
+    apply plugin: 'java'
 
-version = '0.1.0'
+    version = '0.1.0'
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile group: 'net.java.dev.jna', name: 'jna', version: '4.1.0'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-// debug //
-
-jar {
-    manifest {
-        attributes 'Main-Class': 'com.jimbru.posix.Posix'
+    repositories {
+        mavenCentral()
     }
 }
 
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
-            'Implementation-Version': version,
-            'Main-Class': 'com.jimbru.posix.Posix'
+project(':posix') {
+
+    dependencies {
+        compile 'net.java.dev.jna:jna:4.1.0'
+        testCompile 'junit:junit:4.12'
     }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+
+    test {
+        dependsOn { ':testharness:fatJar' }
+
+        testLogging {
+            exceptionFormat = 'full'
+            showStandardStreams = true
+        }
+    }
+}
+
+project(':testharness') {
+
+    dependencies {
+        compile project(':posix')
+    }
+
+    def mainClass = 'com.jimbru.posix.TestHarness'
+
+    jar {
+        manifest {
+            attributes 'Main-Class': mainClass
+        }
+    }
+
+    task fatJar(type: Jar) {
+        manifest {
+            attributes 'Implementation-Title': 'Posix TestHarness',
+                       'Implementation-Version': version,
+                       'Main-Class': mainClass
+        }
+        baseName = project.name + '-all'
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+        with jar
+    }
 }
