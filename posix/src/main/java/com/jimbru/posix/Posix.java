@@ -32,8 +32,4 @@ public class Posix {
     public static int execvp(String file, String[] argv) {
         return getInstance().execvp(file, argv);
     }
-
-    public static void main(String[] args) {
-        Posix.execvp("/bin/echo", new String[]{"echo", "hello world"});
-    }
 }
