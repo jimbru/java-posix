@@ -30,19 +30,35 @@ public class PosixTest {
         return ret;
     }
 
+    private void assertFailure(int returnCode) {
+        // value defined in testharness
+        Assert.assertEquals(2, returnCode);
+    }
+
     @Test
-    public void execv() {
+    public void execvSuccess() {
         Assert.assertEquals(5, this.execHarness("execv", "/bin/sh", "-c", "exit 5"));
     }
 
     @Test
-    public void execve() {
+    public void execvBadPath() {
+        this.assertFailure(this.execHarness("execv", "sh", "-c", "exit 5"));
+    }
+
+    @Test
+    public void execveSuccess() {
         String test_cmd = "/usr/bin/env | /usr/bin/grep -q 'TEST=abc'";
         Assert.assertEquals(0, this.execHarness("execve", "/bin/sh", "-c", test_cmd));
     }
 
     @Test
+    public void execveBadPath() {
+        this.assertFailure(this.execHarness("execve", "sh", "-c", "exit 5"));
+    }
+
+    @Test
     public void execvp() {
+        Assert.assertEquals(5, this.execHarness("execvp", "/bin/sh", "-c", "exit 5"));
         Assert.assertEquals(5, this.execHarness("execvp", "sh", "-c", "exit 5"));
     }
 }

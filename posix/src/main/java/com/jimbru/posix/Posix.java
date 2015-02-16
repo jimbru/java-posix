@@ -1,5 +1,6 @@
 package com.jimbru.posix;
 
+import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
@@ -7,9 +8,9 @@ import com.sun.jna.Platform;
 public class Posix {
 
     private interface CLibrary extends Library {
-        int execv(String path, String[] argv);
-        int execve(String path, String[] argv, String[] envp);
-        int execvp(String file, String[] argv);
+        int execv(String path, String[] argv) throws LastErrorException;
+        int execve(String path, String[] argv, String[] envp) throws LastErrorException;
+        int execvp(String file, String[] argv) throws LastErrorException;
     }
 
     private static CLibrary _instance = null;

@@ -1,6 +1,7 @@
 package com.jimbru.posix;
 
 import com.jimbru.posix.Posix;
+import com.sun.jna.LastErrorException;
 import java.util.Arrays;
 
 public class TestHarness {
@@ -11,22 +12,32 @@ public class TestHarness {
             System.exit(1);
         }
 
-        String args_first = args[1];
-        String[] args_rest = Arrays.copyOfRange(args, 1, args.length);
+        String path = args[1];
+        String[] argv = Arrays.copyOfRange(args, 1, args.length);
+        int ret = 0;
 
-        switch (args[0]) {
-            case "execv":
-                Posix.execv(args_first, args_rest);
-                break;
-            case "execve":
-                Posix.execve(args_first, args_rest, new String[]{"PATH=/bin", "TEST=abc"});
-                break;
-            case "execvp":
-                Posix.execvp(args_first, args_rest);
-                break;
-            default:
-                System.out.printf("Unknown function: %s\n", args[0]);
-                System.exit(1);
+        try {
+            switch (args[0]) {
+                case "execv":
+                    ret = Posix.execv(path, argv);
+                    break;
+                case "execve":
+                    ret = Posix.execve(path, argv, new String[]{"PATH=/bin", "TEST=abc"});
+                    break;
+                case "execvp":
+                    ret = Posix.execvp(path, argv);
+                    break;
+                default:
+                    System.out.printf("Unknown function: %s\n", args[0]);
+                    System.exit(1);
+            }
+        } catch (LastErrorException e) {
+            // System.out.printf("LastErrorException: %s\n", e.toString());
+            System.exit(2);
+        }
+        if (ret == -1) {
+            System.out.printf("Function failed with return code: %d\n", ret);
+            System.exit(2);
         }
     }
 }
