@@ -1,6 +1,9 @@
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
 
+    group = 'com.jimbru.posix'
     version = '0.1.0'
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
@@ -23,6 +26,68 @@ project(':posix') {
         testLogging {
             exceptionFormat = 'full'
             showStandardStreams = true
+        }
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    signing {
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+
+                pom.project {
+                    name 'java-posix'
+                    packaging 'jar'
+                    description 'Easily call standard POSIX functions from Java.'
+                    url 'https://github.com/jimbru/java-posix'
+
+                    scm {
+                        url 'scm:git@github.com:jimbru/java-posix.git'
+                        connection 'scm:git@github.com:jimbru/java-posix.git'
+                        developerConnection 'scm:git@github.com:jimbru/java-posix.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The MIT License'
+                            url 'https://github.com/jimbru/java-posix/blob/master/LICENSE'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'jimbru'
+                            name 'Jim Brusstar'
+                            email 'jim.brusstar@gmail.com'
+                        }
+                    }
+                }
+            }
         }
     }
 }
